@@ -26,6 +26,7 @@ export interface CreateUserDTO {
   password: string;
   role?: UserRole;
   contactNumber?: string;
+  gender?: string;
 }
 
 export interface UpdateUserDTO {

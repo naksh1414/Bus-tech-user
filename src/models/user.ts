@@ -25,6 +25,9 @@ const UserSchema = new mongoose.Schema(
     contactNumber: {
       type: String,
     },
+    gender: {
+      type: String,
+    },
   },
   {
     timestamps: true,
