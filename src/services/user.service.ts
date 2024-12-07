@@ -30,7 +30,7 @@ export class UserService {
     const user = await User.findOne({ email: loginData.email }).select('+password');
 
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error('User Not Found');
     }
 
     const isValidPassword = await PasswordUtil.compare(
