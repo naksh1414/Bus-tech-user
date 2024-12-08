@@ -95,12 +95,7 @@ router.put("/profile", [authMiddleware], async (req: any, res: any) => {
 
     res.status(200).json({
       message: "Profile updated successfully",
-      user: {
-        id: updatedUser._id,
-        email: updatedUser.email,
-        name: updatedUser.name,
-        role: updatedUser.role,
-      },
+      user: updatedUser,
     });
   } catch (error) {
     if (error instanceof Error) {
