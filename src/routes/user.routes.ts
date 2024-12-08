@@ -69,12 +69,7 @@ router.get("/profile", [authMiddleware], async (req: any, res: any) => {
     res.status(200).json({
       message: "User profile fetched successfully",
       success: true,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
+      user: user,
     });
   } catch (error) {
     res
