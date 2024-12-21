@@ -1,8 +1,8 @@
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import { userRoutes } from "./routes/user.routes";
-import { connectDatabase } from "../config/database";
+import { userRoutes } from "./src/routes/user.routes";
+import { connectDatabase } from "./config/database";
 dotenv.config();
 // Load environment variables
 const app = express();
@@ -13,8 +13,11 @@ app.use(express.json());
 
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/health", (_, res) => {
+  res.send("User Service is running");
+});
 
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 
 // Connect to database and start server
 const startServer = async () => {

@@ -1,5 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { AuthTokenPayload } from '../types/user.types';
+import jwt from "jsonwebtoken";
+import { AuthTokenPayload } from "../types/user.types";
+import dotenv from "dotenv";
+dotenv.config();
 
 interface TokenOptions {
   expiresIn?: string | number;
@@ -13,19 +15,15 @@ export class JWTUtil {
    * @returns Generated JWT token
    */
   static generateToken(
-    payload: AuthTokenPayload, 
+    payload: AuthTokenPayload,
     options: TokenOptions = {}
   ): string {
     const secret = this.getSecretKey();
-    
-    return jwt.sign(
-      payload, 
-      secret, 
-      {
-        expiresIn: options.expiresIn || '7d', // Default 7 days
-        algorithm: 'HS256'
-      }
-    );
+
+    return jwt.sign(payload, secret, {
+      expiresIn: options.expiresIn || "7d", // Default 7 days
+      algorithm: "HS256",
+    });
   }
 
   /**
@@ -37,16 +35,13 @@ export class JWTUtil {
     const secret = this.getSecretKey();
 
     try {
-      return jwt.verify(
-        token, 
-        secret
-      ) as AuthTokenPayload;
+      return jwt.verify(token, secret) as AuthTokenPayload;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        throw new Error('Token has expired');
+        throw new Error("Token has expired");
       }
       if (error instanceof jwt.JsonWebTokenError) {
-        throw new Error('Invalid token');
+        throw new Error("Invalid token");
       }
       throw error;
     }
@@ -57,18 +52,12 @@ export class JWTUtil {
    * @param payload Token payload
    * @returns Refresh token
    */
-  static generateRefreshToken(
-    payload: AuthTokenPayload
-  ): string {
+  static generateRefreshToken(payload: AuthTokenPayload): string {
     const secret = this.getSecretKey();
 
-    return jwt.sign(
-      payload, 
-      secret, 
-      { 
-        expiresIn: '30d' // Longer expiration for refresh token
-      }
-    );
+    return jwt.sign(payload, secret, {
+      expiresIn: "30d", // Longer expiration for refresh token
+    });
   }
 
   /**
@@ -77,9 +66,9 @@ export class JWTUtil {
    */
   private static getSecretKey(): string {
     const secret = process.env.JWT_SECRET;
-    
+
     if (!secret) {
-      throw new Error('JWT secret is not defined');
+      throw new Error("JWT secret is not defined");
     }
 
     return secret;
@@ -92,13 +81,13 @@ export class JWTUtil {
    * @returns Boolean indicating if token is close to expiration
    */
   static isTokenExpiringSoon(
-    token: string, 
+    token: string,
     thresholdSeconds: number = 3600
   ): boolean {
     try {
       const decoded = this.verifyToken(token);
       const currentTime = Math.floor(Date.now() / 1000);
-      
+
       // @ts-ignore
       return decoded.exp - currentTime <= thresholdSeconds;
     } catch {
